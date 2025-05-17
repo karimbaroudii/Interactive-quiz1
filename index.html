@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Interactive Quiz</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .question-box { margin-bottom: 20px; }
+        .choice { display: block; margin: 8px 0; }
+        .feedback { font-weight: bold; margin-top: 10px; }
+        .correct { color: green; }
+        .incorrect { color: red; }
+        #next-btn { margin-top: 20px; display: none; }
+    </style>
+</head>
+<body>
+    <h1>Interactive Quiz</h1>
+    <div id="quiz-container"></div>
+    <button id="next-btn">Next</button>
+
+    <script>
+        const questions = [{'question': "“I was only an absurd puppet sent to do the dirty work for the empire.” What does this statement imply about the narrator's feelings towards his role?", 'choices': ['He feels powerful.', 'He feels conflicted and trapped.', 'He enjoys his position.', 'He is indifferent.'], 'answer': 'He feels conflicted and trapped.'}, {'question': '“It was a beautiful afternoon, and the sun was shining, but I had the feeling that something terrible was about to happen.” What is the significance of this statement?', 'choices': ["It reflects the narrator's optimism.", 'It foreshadows the impending conflict.', 'It indicates his happiness.', 'It describes the environment.'], 'answer': 'It foreshadows the impending conflict.'}];
+        let currentQuestion = 0;
+
+        const container = document.getElementById('quiz-container');
+        const nextBtn = document.getElementById('next-btn');
+
+        function showQuestion(index) {
+            const q = questions[index];
+            container.innerHTML = `
+                <div class="question-box">
+                    <p><strong>Question ${index + 1}:</strong> ${q.question}</p>
+                    ${q.choices.map((c, i) => `<button class="choice" onclick="checkAnswer('${c.replace(/'/g, "\'")}', '${q.answer.replace(/'/g, "\'")}')">${c}</button>`).join('')}
+                    <div class="feedback" id="feedback"></div>
+                </div>
+            `;
+            nextBtn.style.display = 'none';
+        }
+
+        function checkAnswer(selected, correct) {
+            const feedback = document.getElementById('feedback');
+            if (selected === correct) {
+                feedback.textContent = 'Correct!';
+                feedback.className = 'feedback correct';
+            } else {
+                feedback.textContent = 'Incorrect. The correct answer is: ' + correct;
+                feedback.className = 'feedback incorrect';
+            }
+            document.querySelectorAll('.choice').forEach(btn => btn.disabled = true);
+            nextBtn.style.display = 'inline';
+        }
+
+        nextBtn.addEventListener('click', () => {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                showQuestion(currentQuestion);
+            } else {
+                container.innerHTML = '<h2>Quiz Completed!</h2>';
+                nextBtn.style.display = 'none';
+            }
+        });
+
+        showQuestion(currentQuestion);
+    </script>
+</body>
+</html>
